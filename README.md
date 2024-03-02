@@ -13,5 +13,8 @@ Il Login impiega hashing con SHA-512 (ritenuto sufficiente per la natura del pro
 - [x] Backend MySQL
 - [x] Implementazione di SQL al progrogramma Java
 
+Di default i login abilitati sono:
+username: 'Mario', password: 'Rossi'
+username: 'Admin', password: 'Password'
 
-
+(Altre possono essere aggiunte al DB sotto la tabella Utente, la password deve essere codificata in SHA-512.)

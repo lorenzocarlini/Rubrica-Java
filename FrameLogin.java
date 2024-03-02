@@ -1,19 +1,25 @@
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 public class FrameLogin extends JFrame {
     private static final long serialVersionUID = 1L;
-    
+
     public interface LoginListener {
         void onLoginSuccess();
         void onLoginFailure();
     }
 
     private FrameLogin.LoginListener listener;
-    
+
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton loginButton;
@@ -22,7 +28,7 @@ public class FrameLogin extends JFrame {
     public FrameLogin(Keychain keychain) {
         setTitle("Login");
         setSize(300, 150);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); // Center the frame
         this.keychain = keychain;
 

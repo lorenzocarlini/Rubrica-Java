@@ -1,8 +1,13 @@
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 import java.util.Vector;
-import java.io.FileInputStream;
 
 public class Rubrica {
     private Vector<Persona> rubrica;
@@ -65,7 +70,7 @@ public class Rubrica {
             System.out.println("Error loading personas from database.");
         }
     }
-    
+
     public void addPersona(Persona persona) {
     	   int maxId = 0;
         // Ensure addPersona commits only after the initial loadPersonasFromDB
@@ -90,7 +95,7 @@ public class Rubrica {
                 ps.setString(5, persona.getTelefono());
                 ps.setInt(6, persona.getEta());
                 ps.executeUpdate();
-                
+
                 try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                     if (generatedKeys.next()) {
                         persona.setId(generatedKeys.getInt(1));
@@ -104,7 +109,7 @@ public class Rubrica {
 
         rubrica.add(persona);
     }
-    
+
     public void removePersona(Persona persona) {
         try (PreparedStatement ps = this.connection.prepareStatement(
                 "DELETE FROM Persona WHERE id = ?")) {
@@ -114,10 +119,10 @@ public class Rubrica {
             e.printStackTrace();
             System.out.println("Error removing persona from database.");
         }
-        
+
         rubrica.remove(persona);
     }
-    
+
     public Vector<Persona> getAllPersona(){
         return rubrica;
     }
@@ -136,7 +141,7 @@ public class Rubrica {
             e.printStackTrace();
             System.out.println("Error updating persona in database.");
         }
-        
+
         for (int i = 0; i < rubrica.size(); i++) {
             Persona persona = rubrica.get(i);
             if (persona.getId() == updatedPersona.getId()) {
@@ -145,7 +150,7 @@ public class Rubrica {
             }
         }
     }
-    
+
     public Object[][] getArray() {
         Object[][] array = new Object[rubrica.size()][];
         for (int i = 0; i < rubrica.size(); i++) {

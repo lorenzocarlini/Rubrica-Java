@@ -3,10 +3,10 @@ import java.util.Objects;
 public class Persona {
 	int id;
     private String nome;
-    private String cognome;  
-    private String indirizzo; 
-    private String telefono; 
-    private int eta;          
+    private String cognome;
+    private String indirizzo;
+    private String telefono;
+    private int eta;
 
 public Persona(String nome, String cognome, String indirizzo, String telefono, int eta) {
     this.id = -1;
@@ -29,11 +29,11 @@ public Persona(int id,String nome, String cognome, String indirizzo, String tele
 	public int getId() {
 	    return id;
 	}
-	
+
 	public void setId(int id) {
 	    this.id = id;
 	}
-	
+
 
     public String getNome() {
         return nome;
@@ -74,11 +74,15 @@ public Persona(int id,String nome, String cognome, String indirizzo, String tele
     public void setEta(int eta) {
         this.eta = eta;
     }
-    
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+			return true;
+		}
+        if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
         Persona persona = (Persona) o;
         return id == persona.id;
     }

@@ -12,7 +12,8 @@ public class Main {
         SwingUtilities.invokeLater(() -> {
             FrameLogin frameLogin = new FrameLogin(keychain);
             frameLogin.setLoginListener(new FrameLogin.LoginListener() {
-                public void onLoginSuccess() {
+                @Override
+				public void onLoginSuccess() {
                     SwingUtilities.invokeLater(() -> {
                         FrameMain frameMain = new FrameMain(rubrica);
                         frameMain.setVisible(true);
@@ -20,7 +21,8 @@ public class Main {
                     });
                 }
 
-                public void onLoginFailure() {
+                @Override
+				public void onLoginFailure() {
                     System.out.println("Login failed");
 
                 }

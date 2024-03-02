@@ -1,5 +1,11 @@
-import javax.swing.*;
-import java.awt.*;
+import java.awt.GridLayout;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 public class FrameEdit extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -19,7 +25,7 @@ public class FrameEdit extends JFrame {
     }
 
     public FrameEdit(Persona persona) {
-        this.persona = persona; 
+        this.persona = persona;
         initUI();
     }
 
@@ -27,29 +33,29 @@ public class FrameEdit extends JFrame {
         setTitle("Edit Persona - ID: " + persona.getId());
         setSize(350, 220);
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLayout(new GridLayout(6, 2, 5, 5));
-        
+
         add(new JLabel("Nome:"));
         nomeField = new JTextField(persona.getNome());
         add(nomeField);
-        
+
         add(new JLabel("Cognome:"));
         cognomeField = new JTextField(persona.getCognome());
         add(cognomeField);
-        
+
         add(new JLabel("Indirizzo:"));
         indirizzoField = new JTextField(persona.getIndirizzo());
         add(indirizzoField);
-        
+
         add(new JLabel("Telefono:"));
         telefonoField = new JTextField(persona.getTelefono());
         add(telefonoField);
-        
+
         add(new JLabel("Età:"));
         etaField = new JTextField(String.valueOf(persona.getEta()));
         add(etaField);
-        
+
         saveButton = new JButton("Salva");
         saveButton.addActionListener(e -> {
             // Valida l'input prima di aggiornare la persona
@@ -58,16 +64,16 @@ public class FrameEdit extends JFrame {
                 indirizzoField.getText().trim().isEmpty() ||
                 telefonoField.getText().trim().isEmpty() ||
                 etaField.getText().trim().isEmpty()) {
-                
+
                 JOptionPane.showMessageDialog(this, "Nessun campo deve essere vuoto.", "Errore di validazione", JOptionPane.ERROR_MESSAGE);
                 return; // Ferma l'operazione di aggiornamento
             }
-            
+
             try {
                 int eta = Integer.parseInt(etaField.getText().trim());
                 // Crea una nuova persona con i cambi aggiornati
                 Persona updatedPersona = new Persona(persona.getId(), nomeField.getText().trim(), cognomeField.getText().trim(), indirizzoField.getText().trim(), telefonoField.getText().trim(), eta);
-                
+
                 if (listener != null) {
                     listener.onSave(updatedPersona);
                 }
@@ -83,7 +89,7 @@ public class FrameEdit extends JFrame {
             if (listener != null) {
                 listener.onCancel();
             }
-            dispose(); 
+            dispose();
         });
         add(cancelButton);
     }

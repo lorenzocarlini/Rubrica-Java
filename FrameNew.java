@@ -1,5 +1,11 @@
-import javax.swing.*;
-import java.awt.*;
+import java.awt.GridLayout;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.WindowConstants;
 
 public class FrameNew extends JFrame {
     private static final long serialVersionUID = 1L;
@@ -10,14 +16,14 @@ public class FrameNew extends JFrame {
     public FrameNew(Rubrica rubrica) {
         this.rubrica = rubrica;
         initUI();
-        
+
     }
 
     private void initUI() {
         setTitle("New Persona");
         setSize(350, 250);
-        setLocationRelativeTo(null); 
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setLayout(new GridLayout(6, 2, 5, 5)); // 6 righe, 2 colonne, 5px padding
 
         add(new JLabel("Nome:"));

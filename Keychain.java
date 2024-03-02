@@ -1,6 +1,10 @@
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Properties;
 import java.util.Vector;
 public class Keychain {
@@ -8,11 +12,11 @@ public class Keychain {
     private Connection connection;
 
     public Keychain() {
-        this.keychain = new Vector<Utente>();
+        this.keychain = new Vector<>();
         initializeDBConnection();
         loadUtentiFromDB();
     }
-    
+
     private void initializeDBConnection() {
         Properties props = new Properties();
         try {
@@ -75,13 +79,13 @@ public class Keychain {
         }
         return null; // Restituisci null se non é stato trovato nessun utente corrispondente
     }
-    
+
     public boolean tryLogin(Utente utente, String inPassword) {
     	if(utente == null) {
     		return false;
     	}
     	else {
-    	return utente.checkPassword(utente.getHashedPassword(), inPassword) == true;
+    	return utente.checkPassword(utente.getHashedPassword(), inPassword);
     	}
     }
 }

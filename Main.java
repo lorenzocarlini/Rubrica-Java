@@ -5,7 +5,6 @@ public class Main {
         Rubrica rubrica = new Rubrica();
 
         Keychain keychain = new Keychain();
-        //keychain.addUtente(new Utente("Mario","Rossi"));
         keychain.addUtente(new Utente("Admin","Password"));
 
 

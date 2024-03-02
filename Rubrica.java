@@ -12,19 +12,19 @@ import java.util.Vector;
 public class Rubrica {
     private Vector<Persona> rubrica;
     private Connection connection;
-    private boolean initialLoadCompleted = false; // Flag to track if initial load from DB has been completed
+    private boolean initialLoadCompleted = false; // Segnale per tracciare se il caricamento iniziale dal DB è stato completato
 
     public Rubrica() {
         this.rubrica = new Vector<>();
         this.initializeDBConnection();
         this.loadPersonasFromDB();
-        this.initialLoadCompleted = true; // Set true after initial load is completed
+        this.initialLoadCompleted = true; // Impostato su true dopo che il caricamento iniziale è completato
     }
 
     private void initializeDBConnection() {
         Properties props = new Properties();
         try {
-            // Load database properties
+            // Carica le proprietà del database
             String propertiesPath = "./credenziali_database.properties";
             props.load(new FileInputStream(propertiesPath));
 
@@ -32,24 +32,20 @@ public class Rubrica {
             String username = props.getProperty("db.username");
             String password = props.getProperty("db.password");
 
-            // Ensure the JDBC driver is loaded
+            // Assicurati che il driver JDBC sia caricato
             Class.forName("com.mysql.cj.jdbc.Driver");
             this.connection = DriverManager.getConnection(url, username, password);
         } catch (ClassNotFoundException e) {
-            System.out.println("MySQL JDBC Driver not found.");
+            System.out.println("Driver JDBC MySQL non trovato.");
             e.printStackTrace();
         } catch (SQLException e) {
-            System.out.println("Error connecting to the database.");
+            System.out.println("Errore nella connessione al database.");
             e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("Error loading database credentials.");
+            System.out.println("Errore nel caricamento delle credenziali del database.");
             e.printStackTrace();
         }
     }
-
-    // Include the rest of the Rubrica methods here...
-
-
 
     private void loadPersonasFromDB() {
         try (Statement statement = this.connection.createStatement()) {
@@ -67,25 +63,20 @@ public class Rubrica {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error loading personas from database.");
+            System.out.println("Errore nel caricamento delle persone dal database.");
         }
     }
 
     public void addPersona(Persona persona) {
-    	   int maxId = 0;
-        // Ensure addPersona commits only after the initial loadPersonasFromDB
+        // Assicurati che addPersona effettui il commit solo dopo il caricamento iniziale da loadPersonasFromDB
         if (initialLoadCompleted) {
+            int maxId = 0;
             for (Persona p : rubrica) {
                 if (p.getId() > maxId) {
                     maxId = p.getId();
                 }
             }
-            if(persona.id == -1) {
-            	if (persona.id>maxId) {
-            		maxId = persona.id;
-            	}
-                persona.setId(maxId + 1); // Aumenta di 1 il contatore degli id assegnati
-            }
+            persona.setId(maxId + 1); // Incrementa di 1 il contatore degli id assegnati
             try (PreparedStatement ps = this.connection.prepareStatement(
                     "INSERT INTO Persona (id, nome, cognome, indirizzo, telefono, eta) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS)) {
                 ps.setInt(1, persona.getId());
@@ -103,7 +94,7 @@ public class Rubrica {
                 }
             } catch (SQLException e) {
                 e.printStackTrace();
-                System.out.println("Error adding persona to database.");
+                System.out.println("Errore nell'aggiunta della persona al database.");
             }
         }
 
@@ -117,13 +108,13 @@ public class Rubrica {
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error removing persona from database.");
+            System.out.println("Errore nella rimozione della persona dal database.");
         }
 
         rubrica.remove(persona);
     }
 
-    public Vector<Persona> getAllPersona(){
+    public Vector<Persona> getAllPersona() {
         return rubrica;
     }
 
@@ -139,7 +130,7 @@ public class Rubrica {
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Error updating persona in database.");
+            System.out.println("Errore nell'aggiornamento della persona nel database.");
         }
 
         for (int i = 0; i < rubrica.size(); i++) {

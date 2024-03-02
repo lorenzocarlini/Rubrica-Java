@@ -6,9 +6,10 @@ Il Login impiega hashing con SHA-512 (ritenuto sufficiente per la natura del pro
 - [ ] Salting delle Password
 - [x] Login
 - [x] Visualizzazione delle voci in Rubrica in GUI
-- [ ] Inserimento di voci in Rubrica in GUI
-- [ ] Modifica di voci in Rubrica in GUI
-- [ ] Eliminazione di voci in Rubrica in GUI
+- [x] Inserimento di voci in Rubrica in GUI
+- [x] Modifica di voci in Rubrica in GUI
+- [x] Eliminazione di voci in Rubrica in GUI
+- [x] Validazione dei dati
 - [ ] Backend MySQL
 - [ ] Implementazione di SQL al progrogramma Java
 

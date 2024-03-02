@@ -8,7 +8,7 @@ public class Utente {
 
 public Utente(String username, String password) {
     this.username = username;
-    this.password = hashPassword(password);
+    this.password = password;
 	}
 	
 

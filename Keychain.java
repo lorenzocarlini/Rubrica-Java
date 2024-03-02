@@ -21,10 +21,10 @@ public class Keychain {
     public Utente findUserByUsername(String username) {
         for (Utente utente : keychain) {
             if (utente.getUsername().equals(username)) {
-                return utente; // Return the matching user
+                return utente; // Restituisci l'utente corrispondente
             }
         }
-        return null; // Return null if no matching user is found
+        return null; // Restituisci null se non é stato trovato nessun utente corrispondente
     }
     
     public boolean tryLogin(Utente utente, String inPassword) {

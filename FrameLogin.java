@@ -28,19 +28,19 @@ private JTextField usernameField;
         setLocationRelativeTo(null); // Center the frame
         this.keychain = keychain;
 
-        // Create and set up the panel
+        // Crea e prepara il JPanel
         JPanel panel = new JPanel();
         getContentPane().add(panel);
         placeComponents(panel);
 
-        // Display the window
+        // Mostra la finestra
         setVisible(true);
     }
 
     private void placeComponents(JPanel panel) {
         panel.setLayout(null);
 
-        // Username label and text field
+
         JLabel userLabel = new JLabel("Username:");
         userLabel.setBounds(10, 20, 80, 25);
         panel.add(userLabel);
@@ -49,7 +49,7 @@ private JTextField usernameField;
         usernameField.setBounds(100, 20, 165, 25);
         panel.add(usernameField);
 
-        // Password label and text field
+
         JLabel passwordLabel = new JLabel("Password:");
         passwordLabel.setBounds(10, 50, 80, 25);
         panel.add(passwordLabel);
@@ -58,12 +58,12 @@ private JTextField usernameField;
         passwordField.setBounds(100, 50, 165, 25);
         panel.add(passwordField);
 
-        // Login button
+
         loginButton = new JButton("Login");
         loginButton.setBounds(100, 83, 80, 25);
         panel.add(loginButton);
 
-        // Action listener for login button
+        // Action listener per il bottone Login
         loginButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -76,38 +76,24 @@ private JTextField usernameField;
                             "Login Error",
                             JOptionPane.ERROR_MESSAGE);
                 } else {
-                    // Call your login function here with username and password
+                    // Chiama la funzione di login
                 	boolean loginSuccess = keychain.tryLogin(keychain.findUserByUsername(username), password);
                 	if (loginSuccess) {
                         if (listener != null) {
                             listener.onLoginSuccess();
                         }
-                        FrameLogin.this.dispose(); // Close the login frame
+                        FrameLogin.this.dispose(); // Chiudi il frame di Login
                     } else {
                         if (listener != null) {
                             listener.onLoginFailure();
                         }
-                        FrameLogin.this.dispose(); // Close the login frame
+                        FrameLogin.this.dispose(); // Chiudi il frame di Login
                 	};
-                    login(username, password);
                 }
             }
         });
     }
 
-    // Dummy login function for demonstration
-    private void login(String username, String password) {
-        // Implement your login logic here
-    	//keychain.tryLogin(keychain.findUserByName(username),password);
-    }
 
-    public static void main(String[] args) {
-        // Run the application
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new FrameLogin();
-            }
-        });
-    }
+
 }

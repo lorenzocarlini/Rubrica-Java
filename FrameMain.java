@@ -1,20 +1,14 @@
-import java.awt.EventQueue;
-
+import java.awt.event.ActionListener;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
-import javax.swing.JToolBar;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import java.awt.Component;
-import javax.swing.BoxLayout;
-import javax.swing.SpringLayout;
 import javax.swing.JMenuBar;
 import java.awt.GridBagLayout;
 import java.awt.Dimension;
 import java.awt.Insets;
-import java.util.Vector;
-
+import java.awt.event.ActionEvent;
 import javax.swing.JTable;
 import java.awt.GridBagConstraints;
 import javax.swing.UIManager;
@@ -25,15 +19,9 @@ public class FrameMain extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JTable table;
-
-	/**
-	 * Launch the application.
-	 */
+	private Rubrica rubrica;
 
 
-	/**
-	 * Create the frame.
-	 */
 	public FrameMain(Rubrica rubrica) {
 		setMinimumSize(new Dimension(20, 20));
 		setTitle("Rubrica_lc");
@@ -45,6 +33,7 @@ public class FrameMain extends JFrame {
 		gridBagLayout.columnWeights = new double[]{1.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{1.0, Double.MIN_VALUE};
 		getContentPane().setLayout(gridBagLayout);
+		this.rubrica = rubrica;
 		
 		String[] nomiColonne = {
 				"Nome",
@@ -89,26 +78,39 @@ public class FrameMain extends JFrame {
 		btnNuovo.setMargin(new Insets(1, 7, 1, 7));
 		menuBar.add(btnNuovo);
 		
+		btnNuovo.addActionListener(e -> {
+		    FrameNew frameNew = new FrameNew(rubrica);
+		    frameNew.setVisible(true);
+		    frameNew.addWindowListener(new java.awt.event.WindowAdapter() {
+		        @Override
+		        public void windowClosed(java.awt.event.WindowEvent windowEvent) {
+		            refreshTable(); // Aggiorna il contenuto della tabella quando viene chiusa la finestra
+		        }
+		    });
+		});
+
+
+		
 		JButton btnModifica = new JButton("Modifica");
 		btnModifica.setContentAreaFilled(false);
 		btnModifica.setBorderPainted(false);
 		btnModifica.setMargin(new Insets(1, 7, 1, 7));
 		menuBar.add(btnModifica);
 		
-		btnModifica.addActionListener(e -> {
-		    // Seleziona l'indice della riga selezionata
-		    int selectedRow = table.getSelectedRow();
-		    if (selectedRow >= 0) { // Controlla se la riga é selezionata
-		  
-		        Object[] rowData = new Object[table.getColumnCount()];
-		        for (int i = 0; i < table.getColumnCount(); i++) {
-		            rowData[i] = table.getModel().getValueAt(selectedRow, i);
+		btnModifica.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        int selectedRow = table.getSelectedRow();
+		        if (selectedRow >= 0) {
+		            // Recupera la persona usando il suo id
+		            Persona persona = rubrica.getAllPersona().get(selectedRow); 
+		            openFrameEdit(persona);
+		        } else {
+		            JOptionPane.showMessageDialog(FrameMain.this, "Seleziona una persona da modificare.", "Nessuna persona selezionata", JOptionPane.WARNING_MESSAGE);
 		        }
-
-		    } else {
-		        JOptionPane.showMessageDialog(this, "Seleziona una persona da modificare.", "Nessuna persona selezionata", JOptionPane.WARNING_MESSAGE);
 		    }
 		});
+
 		
 		
 		JButton btnElimina = new JButton("Elimina");
@@ -116,5 +118,86 @@ public class FrameMain extends JFrame {
 		btnElimina.setBorderPainted(false);
 		btnElimina.setMargin(new Insets(1, 7, 1, 7));
 		menuBar.add(btnElimina);
+		
+		btnElimina.addActionListener(new ActionListener() {
+		    @Override
+		    public void actionPerformed(ActionEvent e) {
+		        int selectedRow = table.getSelectedRow();
+		        if (selectedRow >= 0) {
+		            // Usa il nome e cognome della selezione per la finestra di conferma
+		            String nome = table.getModel().getValueAt(selectedRow, 0).toString();
+		            String cognome = table.getModel().getValueAt(selectedRow, 1).toString();
+		            
+		            // Finestra di conferma
+		            int response = JOptionPane.showConfirmDialog(
+		                FrameMain.this, 
+		                "Eliminare la persona " + nome + " " + cognome + "?", 
+		                "Conferma eliminazione", 
+		                JOptionPane.YES_NO_OPTION, 
+		                JOptionPane.QUESTION_MESSAGE
+		            );
+		            
+		            if (response == JOptionPane.YES_OPTION) {
+		                // Elimina la persona e aggiorna la tabella
+		                rubrica.removePersona(rubrica.getAllPersona().get(selectedRow));
+		                refreshTable();
+		            }
+		            // Se si sceglie no, chiudi senza far nulla
+		        } else {
+		            JOptionPane.showMessageDialog(
+		                FrameMain.this, 
+		                "É necessario selezionare una persona per poterla eliminare.", 
+		                "Errore", 
+		                JOptionPane.ERROR_MESSAGE
+		            );
+		        }
+		    }
+		});
+		menuBar.add(btnElimina);
 	}
+    private void openFrameEdit(Persona persona) {
+        FrameEdit frameEdit = new FrameEdit(persona);
+        frameEdit.setFrameEditListener(new FrameEdit.FrameEditListener() {
+            @Override
+            public void onSave(Persona updatedPersona) {
+                // Modifica la persona e aggiorna la tabella
+                rubrica.updatePersona(updatedPersona); 
+                refreshTable(); // 
+            }
+
+            @Override
+            public void onCancel() {
+            }
+        });
+        frameEdit.setVisible(true);
+    }
+    private void refreshTable() {
+        // Converti rubrica in un Object[][] per essere usata con JTable
+        Object[][] updatedData = rubrica.getArray();
+        
+        // Column Names
+        String[] columnNames = {
+            "Nome",
+            "Cognome",
+            "Indirizzo",
+            "Num.Telefono",
+            "Etá"
+        };
+
+        // Usa il nuovo modello per la tabella
+        table.setModel(new DefaultTableModel(updatedData, columnNames) {
+            private static final long serialVersionUID = 1L;
+
+			@Override
+            public boolean isCellEditable(int row, int column) {
+                // Make table cells non-editable
+                return false;
+            }
+        });
+
+    }
+
+
+
+	
 }
